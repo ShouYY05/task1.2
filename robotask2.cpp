@@ -1,7 +1,7 @@
 #include <iostream>
 #include<opencv2/opencv.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
-#include <opencv2/imgproc/types_c.h>   //É«²Ê¿Õ¼ä×ª»»
+#include <opencv2/imgproc/types_c.h>   //è‰²å½©ç©ºé—´è½¬æ¢
 #include "opencv2/highgui/highgui.hpp"
 #include <stdlib.h>
 
@@ -10,83 +10,83 @@ using namespace std;
 
 int main()
 {
-    //½ØÈ¡ÊÓÆµµÄÃ¿Ò»Ö¡Í¼Ïñ
-    VideoCapture video("ÄÜÁ¿»ú¹Ø (1).avi");      // ´ò¿ªÊÓÆµÎÄ¼ş debugÎŞ·¨±àÒë£¬release²Å¿ÉÒÔ£¡£¡£¡OpencvÏÂÔØµÄ¿ÉÄÜÊÇRelease °æ±¾
-    if (!video.isOpened())               // ÅĞ¶ÏÊÇ·ñ´ò¿ª³É¹¦
+    //æˆªå–è§†é¢‘çš„æ¯ä¸€å¸§å›¾åƒ
+    VideoCapture video("èƒ½é‡æœºå…³ (1).avi");      // æ‰“å¼€è§†é¢‘æ–‡ä»¶ debugæ— æ³•ç¼–è¯‘ï¼Œreleaseæ‰å¯ä»¥ï¼ï¼ï¼Opencvä¸‹è½½çš„å¯èƒ½æ˜¯Release ç‰ˆæœ¬
+    if (!video.isOpened())               // åˆ¤æ–­æ˜¯å¦æ‰“å¼€æˆåŠŸ
     {
         cout << "open video file failed. " << endl;
         return -1;
     }
 
-    Mat hsvimg;                      //´´½¨½ÓÊÜÍ¼ÏñµÄ´°¿Ú
+    Mat hsvimg;                      //åˆ›å»ºæ¥å—å›¾åƒçš„çª—å£
 
     while (true)
     {
         Mat src;
-        video >> src;                    // ¶ÁÈ¡Í¼ÏñÖ¡ÖÁframe
-        //if (!src.empty())	imshow("source images", src);   // frame²»Îª¿ÕÊ±£¬ÏÔÊ¾Ô­Ê¼Í¼Ïñ
+        video >> src;                    // è¯»å–å›¾åƒå¸§è‡³frame
+        //if (!src.empty())	imshow("source images", src);   // frameä¸ä¸ºç©ºæ—¶ï¼Œæ˜¾ç¤ºåŸå§‹å›¾åƒ
 
-//1.ÌáÈ¡À¶É«µÄÍ¼Ïñ£¬²¢¶şÖµ»¯´¦Àí
-        cvtColor(src, hsvimg, CV_BGR2HSV);                         //°Ñ¶ÁÈ¡µÄsrcÍ¼Ïñ×ªÎªHSVÍ¼
-        vector<Mat> channels;                                     //·Ö³ÉÈı¸öÆµµÀ
+//1.æå–è“è‰²çš„å›¾åƒï¼Œå¹¶äºŒå€¼åŒ–å¤„ç†
+        cvtColor(src, hsvimg, CV_BGR2HSV);                         //æŠŠè¯»å–çš„srcå›¾åƒè½¬ä¸ºHSVå›¾
+        vector<Mat> channels;                                     //åˆ†æˆä¸‰ä¸ªé¢‘é“
         split(src, channels);
         Mat hue = channels.at(0);
         Mat value = channels.at(2);
-        Mat dst(hue.rows, hue.cols, CV_8UC1, Scalar(255, 255, 255));   //½¨Á¢´¿°×Í¼Ïñ»­°å
+        Mat dst(hue.rows, hue.cols, CV_8UC1, Scalar(255, 255, 255));   //å»ºç«‹çº¯ç™½å›¾åƒç”»æ¿
 
         for (int i = 0; i < hue.rows; i++)
         {
             for (int j = 0; j < hue.cols; j++)
             {
-                int h = hue.at<uchar>(i, j);                      //¸ÃµãH¡¢VµÄÖµ
+                int h = hue.at<uchar>(i, j);                      //è¯¥ç‚¹Hã€Vçš„å€¼
                 int v = value.at<uchar>(i, j);
-                if (h > 78 && v < 50)                             //É¸Ñ¡À¶É«ÇøÓòÎªºÚÉ«Öµ
+                if (h > 78 && v < 50)                             //ç­›é€‰è“è‰²åŒºåŸŸä¸ºé»‘è‰²å€¼
                     dst.at<uchar>(i, j) = 0;
             }
         }
-        imshow("¶şÖµ±ßÔµÍ¼", dst);
+        imshow("äºŒå€¼è¾¹ç¼˜å›¾", dst);
 
 
         /*
-        //ÅòÕÍ²Ù×÷
+        //è†¨èƒ€æ“ä½œ
         int structElementSize = 1;
         Mat element = getStructuringElement(MORPH_RECT, Size(2 * structElementSize + 1,
             2 * structElementSize + 1), Point(structElementSize, structElementSize));
         dilate(dst, dst, element);
         
-        //±ÕÔËËã£¬Ïû³ıÉÈÒ¶ÉÏ¿ÉÄÜ´æÔÚµÄĞ¡¶´
+        //é—­è¿ç®—ï¼Œæ¶ˆé™¤æ‰‡å¶ä¸Šå¯èƒ½å­˜åœ¨çš„å°æ´
         int structElementSize = 1;
         Mat element = getStructuringElement(MORPH_RECT, Size(2 * structElementSize + 1,
             2 * structElementSize + 1), Point(structElementSize, structElementSize));
         morphologyEx(dst, dst, MORPH_CLOSE, element);
-        imshow("¶şÖµÍ¼", dst);
+        imshow("äºŒå€¼å›¾", dst);
        */ 
   
-// 2.¿ª±ÕÔËËã+ÂşË®Ìî³ä£¬µÃµ½Á½ÖÖ²»Í¬µÄ¾ØĞÎ
-        Mat element1 = getStructuringElement(MORPH_RECT, Size(5, 5));//ÉèÖÃÄÚºË1
-        Mat element2 = getStructuringElement(MORPH_RECT, Size(23, 23));//ÉèÖÃÄÚºË2
-        morphologyEx(dst, dst, MORPH_OPEN, element1);//¿ªÔËËã(Ê¹Í¼ĞÎÃ÷ÏÔ)
-        floodFill(dst, Point(0, 0), Scalar(0));//ÂşË®·¨
-        morphologyEx(dst, dst, MORPH_CLOSE, element2);//±ÕÔËËã(¼õÉÙÍ¼ĞÎÊıÁ¿)
-        imshow("ÂşË®Ìî³ä", dst);
+// 2.å¼€é—­è¿ç®—+æ¼«æ°´å¡«å……ï¼Œå¾—åˆ°ä¸¤ç§ä¸åŒçš„çŸ©å½¢
+        Mat element1 = getStructuringElement(MORPH_RECT, Size(5, 5));//è®¾ç½®å†…æ ¸1
+        Mat element2 = getStructuringElement(MORPH_RECT, Size(23, 23));//è®¾ç½®å†…æ ¸2
+        morphologyEx(dst, dst, MORPH_OPEN, element1);//å¼€è¿ç®—(ä½¿å›¾å½¢æ˜æ˜¾)
+        floodFill(dst, Point(0, 0), Scalar(0));//æ¼«æ°´æ³•
+        morphologyEx(dst, dst, MORPH_CLOSE, element2);//é—­è¿ç®—(å‡å°‘å›¾å½¢æ•°é‡)
+        imshow("æ¼«æ°´å¡«å……", dst);
 
-//3. ÀûÓÃ½Çµã£¬ÕÒµ½ËùĞè¾ØĞÎ£¬²¢»­Í¼
+//3. åˆ©ç”¨è§’ç‚¹ï¼Œæ‰¾åˆ°æ‰€éœ€çŸ©å½¢ï¼Œå¹¶ç”»å›¾
         vector<vector<Point>> contours;
         vector<Vec4i> hireachy;
-        Point2f vertex[4];                                         //Íâ½Ó¾ØĞÎµÄËÄ¸ö¶¥µã
+        Point2f vertex[4];                                         //å¤–æ¥çŸ©å½¢çš„å››ä¸ªé¡¶ç‚¹
         findContours(dst, contours, hireachy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
         
         for (int i = 0; i < contours.size(); ++i)
         {
-            RotatedRect minRect = minAreaRect(Mat(contours[i]));  //×îĞ¡Íâ½Ó¾ØĞÎ
+            RotatedRect minRect = minAreaRect(Mat(contours[i]));  //æœ€å°å¤–æ¥çŸ©å½¢
             
-            minRect.points(vertex);                               //Íâ½Ó¾ØĞÎµÄËÄ¸ö¶¥µã
+            minRect.points(vertex);                               //å¤–æ¥çŸ©å½¢çš„å››ä¸ªé¡¶ç‚¹
             if (minRect.size.width * minRect.size.height >600 && minRect.size.width * minRect.size.height < 1000 )
             {
                 for (int j = 0;j <= 3;j++)
                 {
-                    line(src, vertex[j], vertex[(j + 1) % 4], Scalar(255, 255, 255), 2); //Ëù»­Í¼Ïñ£¬Æğµã£¬ÖÕµã£¬ÑÕÉ«£¬Ïß¿í
+                    line(src, vertex[j], vertex[(j + 1) % 4], Scalar(255, 255, 255), 2); //æ‰€ç”»å›¾åƒï¼Œèµ·ç‚¹ï¼Œç»ˆç‚¹ï¼Œé¢œè‰²ï¼Œçº¿å®½
                 }
                 circle(src, minRect.center, 2, Scalar(0, 0, 255), 3);
             }
@@ -97,11 +97,11 @@ int main()
 
         /*
       
-        //2.¿ò³öÊ¶±ğ°åµÄ·¶Î§
+        //2.æ¡†å‡ºè¯†åˆ«æ¿çš„èŒƒå›´
         vector<vector<Point>> contours;
         vector<Vec4i> hierarchy;
         findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point());
-        //Ö»¼ì²â×îÍâÎ§ÂÖÀª,½ö±£´æÂÖÀªµÄ¹ÕµãĞÅÏ¢,ËùÓĞµÄÂÖÀªĞÅÏ¢Ïà¶ÔÓÚÔ­Ê¼Í¼Ïñ¶ÔÓ¦µãµÄÆ«ÒÆÁ¿Îª0
+        //åªæ£€æµ‹æœ€å¤–å›´è½®å»“,ä»…ä¿å­˜è½®å»“çš„æ‹ç‚¹ä¿¡æ¯,æ‰€æœ‰çš„è½®å»“ä¿¡æ¯ç›¸å¯¹äºåŸå§‹å›¾åƒå¯¹åº”ç‚¹çš„åç§»é‡ä¸º0
 
         RotatedRect rect_tmp2;
         bool findTarget = 0;
@@ -110,26 +110,26 @@ int main()
         {
             for (int i = 0;i >= 0;i = hierarchy[i][0])
             {
-                //ÕÒ³öÂÖÀªµÄ×îĞ¡Íâ½Ó¾ØĞÎ
+                //æ‰¾å‡ºè½®å»“çš„æœ€å°å¤–æ¥çŸ©å½¢
                 rect_tmp2 = minAreaRect(contours[i]);
                 Point2f P[4];
-                //½«¾ØĞÎµÄËÄ¸öµã±£´æÔÚPÖĞ
+                //å°†çŸ©å½¢çš„å››ä¸ªç‚¹ä¿å­˜åœ¨Pä¸­
                 rect_tmp2.points(P);
-                //¿ò³öÍ¼Ïñ
+                //æ¡†å‡ºå›¾åƒ
                 for (int j = 0;j <= 3;j++)
                 {
-                    line(src, P[j], P[(j + 1) % 4], Scalar(255, 255, 255), 2); //Ëù»­Í¼Ïñ£¬Æğµã£¬ÖÕµã£¬ÑÕÉ«£¬Ïß¿í
+                    line(src, P[j], P[(j + 1) % 4], Scalar(255, 255, 255), 2); //æ‰€ç”»å›¾åƒï¼Œèµ·ç‚¹ï¼Œç»ˆç‚¹ï¼Œé¢œè‰²ï¼Œçº¿å®½
                 }
 
                 
-                //ÎªÍ¸ÊÓ±ä»»×ö×¼±¸
+                //ä¸ºé€è§†å˜æ¢åšå‡†å¤‡
                 Point2f srcRect[4];
                 Point2f dstRect[4];
 
                 double width;
                 double height;
 
-                //¶ÔÃ¿¸öÂÖÀªµÄ¿í¸ß½øĞĞ´¦ÀíÊ¹¿í´óÓÚ¸ß
+                //å¯¹æ¯ä¸ªè½®å»“çš„å®½é«˜è¿›è¡Œå¤„ç†ä½¿å®½å¤§äºé«˜
                 width = getDistance(P[0], P[1]);
                 height = getDistance(P[1], P[2]);
 
@@ -149,7 +149,7 @@ int main()
                     
                 }
 
-                //Í¨¹ıÃæ»ıÉ¸Ñ¡
+                //é€šè¿‡é¢ç§¯ç­›é€‰
                 double area = height * width;
                 if (area < 5000)
                 {
@@ -157,12 +157,12 @@ int main()
                     dstRect[1] = Point2f(width, 0);
                     dstRect[2] = Point2f(width, height);
                     
-                    //Í¸ÊÓ±ä»»£¬½ÃÕı³É¹æÔò¾ØĞÎ
+                    //é€è§†å˜æ¢ï¼ŒçŸ«æ­£æˆè§„åˆ™çŸ©å½¢
                     Mat warp_mat = getAffineTransform(srcRect, dstRect);
                     imshow("warp_mat", warp_mat);
                     Mat warp_dst_map;
                     warpAffine(dst, warp_dst_map, warp_mat, warp_dst_map.size());
-                    // ÌáÈ¡ÉÈÒ¶Í¼Æ¬
+                    // æå–æ‰‡å¶å›¾ç‰‡
                     Mat testim;
                     testim = warp_dst_map(Rect(0, 0, width, height));
                     imshow("testim", testim);
@@ -175,7 +175,7 @@ int main()
         }
         imshow("source images2", src);
 
-        if (waitKey(300) > 0) break;	                     // delay 30 ms µÈ´ıÊÇ·ñ°´¼ü
+        if (waitKey(300) > 0) break;	                     // delay 30 ms ç­‰å¾…æ˜¯å¦æŒ‰é”®
         */
         waitKey(50);
     }
@@ -187,7 +187,7 @@ int main()
 }
 
 
-double getDistance(Point2f a, Point2f b)     //¼ÆËãa, bÁ½µãµÄ¾àÀë
+double getDistance(Point2f a, Point2f b)     //è®¡ç®—a, bä¸¤ç‚¹çš„è·ç¦»
 {
     return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
